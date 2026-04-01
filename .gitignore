@@ -98,6 +98,9 @@ Cobble Games/
 # Node modules (if using any Node-based build tools)
 node_modules/
 package-lock.json
+
+# VoodooPlay folder
+Assets/VoodooPlay/
 yarn.lock
 
 # Local environment variables
