@@ -1,0 +1,134 @@
+# This .gitignore file should be placed at the root of your Unity project directory
+#
+# Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
+#
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Ll]og/
+[Uu]ser[Ss]ettings/
+
+# MemoryCache
+MemoryCache/
+
+# Builds
+*.apk
+*.aab
+*.unitypackage
+
+# Crash Dumps
+crashed.dmp
+crashed.dmp.meta
+
+# Explosionality
+explusivity_Data/
+
+# VS/MD solution and project files
+ExportedObj/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity3D generated meta files
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# Unity3D Generated File On Crash Reports
+sysinfo.txt
+
+# Builds
+*.exe
+*.exe.meta
+*.dll
+*.dll.meta
+*.so
+*.so.meta
+*.dylib
+*.dylib.meta
+*.deb
+*.deb.meta
+
+# Text backup files
+*.txt.bak
+
+# Rider IDE
+.idea/
+.idea/**
+Assets/Plugins/Editor/JetBrains*
+UpgradeLog.htm
+UpgradeLog*.XML
+
+# VS Code
+.vscode/
+.vscode/**
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Node modules (if using any Node-based build tools)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Local environment variables
+.env
+.env.local
+
+# OS specific
+Thumbs.db
+.DS_Store
+
+# Unity specific
+ProjectSettings/ProjectVersion.txt
+ProjectSettings/ProjectSettings.asset
+
+# Build results
+bin/
+obj/
+dist/
+
+# NuGet
+*.nupkg
+*.snupkg
+
+# Testing
+test-results/
+.nyc_output/
+coverage/
+
+# IDE
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vimrc
+vimcommand.txt
+
+# tmp files
+*.tmp
