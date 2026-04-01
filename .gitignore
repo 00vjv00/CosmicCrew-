@@ -90,7 +90,8 @@ Thumbs.db
 Assets/Materials/
 Assets/mat/
 Assets/docs/
-Assets/Prefabs/
+Assets/Prefabs/**
+Prefabs/
 Assets/Cobble Games/
 Assets/_Recovery/
 _Recovery/
