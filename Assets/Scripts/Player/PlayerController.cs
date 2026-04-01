@@ -37,6 +37,11 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     [SerializeField] private float moveSpeed = 5f;
     
+    /// <summary>
+    /// Velocidad de rotación hacia dirección de movimiento
+    /// </summary>
+    [SerializeField] private float rotationSpeed = 10f;
+    
     // ========================================================================
     // ESTADO
     // ========================================================================
@@ -71,8 +76,9 @@ public class PlayerController : MonoBehaviour
     
     void FixedUpdate()
     {
-        // Actualizar movimiento
+        // Actualizar movimiento y rotación
         UpdateMovement();
+        UpdateRotation();
     }
     
     // ========================================================================
@@ -115,6 +121,26 @@ public class PlayerController : MonoBehaviour
     {
         // Detener solo movimiento horizontal, mantener vertical
         rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
+    }
+    
+    /// <summary>
+    /// Actualizar rotación del jugador hacia dirección de movimiento
+    /// </summary>
+    private void UpdateRotation()
+    {
+        // Si no hay movimiento, no rotar
+        if (currentMoveDirection.sqrMagnitude < 0.01f)
+            return;
+        
+        // Crear rotación hacia dirección de movimiento
+        Quaternion targetRotation = Quaternion.LookRotation(currentMoveDirection);
+        
+        // Slerp para suavizar rotación
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            rotationSpeed * Time.fixedDeltaTime
+        );
     }
     
     // ========================================================================

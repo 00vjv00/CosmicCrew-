@@ -34,6 +34,7 @@ public class InputManager : MonoBehaviour
     public event System.Action<Vector2> OnTouchEnded;
     public event System.Action OnPowerButtonPressed;
     public event System.Action OnPowerButtonReleased;
+    public event System.Action OnInteractButtonPressed;
     
     // ========================================================================
     // INICIALIZACIÓN
@@ -60,6 +61,13 @@ public class InputManager : MonoBehaviour
         ReadKeyboardInput();
         ReadMouseInput();
         ReadPowerInput();
+        ReadInteractInput();
+        
+        // DEBUG: Mostrar estado de teclas cada frame
+        if (Keyboard.current != null && (Keyboard.current.eKey.isPressed || Keyboard.current.eKey.wasPressedThisFrame))
+        {
+            Debug.LogWarning($"[INPUT DEBUG] E key state: isPressed={Keyboard.current.eKey.isPressed}, wasPressedThisFrame={Keyboard.current.eKey.wasPressedThisFrame}");
+        }
     }
     
     // ========================================================================
@@ -146,6 +154,31 @@ public class InputManager : MonoBehaviour
         {
             Debug.Log("[INPUT] Space released");
             OnPowerButtonReleased?.Invoke();
+        }
+    }
+    
+    // ========================================================================
+    // LEER INTERACCIÓN (E)
+    // ========================================================================
+    
+    private void ReadInteractInput()
+    {
+        if (Keyboard.current == null)
+        {
+            Debug.LogWarning("[INPUT] Keyboard.current is NULL!");
+            return;
+        }
+        
+        // DEBUG: Siempre loguear si E está siendo presionado
+        if (Keyboard.current.eKey.isPressed)
+        {
+            Debug.LogWarning($"[INPUT DEBUG] E is pressed (wasPressedThisFrame={Keyboard.current.eKey.wasPressedThisFrame})");
+        }
+        
+        if (Keyboard.current.eKey.wasPressedThisFrame)
+        {
+            Debug.Log("[INPUT] E pressed - Interact");
+            OnInteractButtonPressed?.Invoke();
         }
     }
     

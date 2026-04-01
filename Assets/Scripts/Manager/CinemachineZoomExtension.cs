@@ -107,42 +107,83 @@ public class CinemachineZoomExtension : MonoBehaviour
     
     /// <summary>
     /// Actualizar cuál es la zona actual del player
+    /// MODIFICADO: Usa Cell1SectorManager para obtener zonas locales
     /// </summary>
     private void UpdateCurrentZone()
     {
         if (playerTransform == null)
             return;
         
-        DynamicZone[] allZones = FindObjectsByType<DynamicZone>(FindObjectsSortMode.None);
-        DynamicZone closestZone = null;
-        float closestDistance = float.MaxValue;
-        
-        foreach (var zone in allZones)
+        // Intentar obtener zonas del Cell1SectorManager local
+        var cell1Manager = Cell1SectorManager.Instance;
+        if (cell1Manager != null)
         {
-            // Verificar si el player está dentro del trigger de esta zona
-            if (zone.Config.zoneRoot != null)
+            DynamicZone[] allZones = cell1Manager.GetAllZones().ToArray();
+            DynamicZone closestZone = null;
+            float closestDistance = float.MaxValue;
+            
+            foreach (var zone in allZones)
             {
-                Collider[] colliders = zone.Config.zoneRoot.GetComponentsInChildren<Collider>();
-                foreach (var col in colliders)
+                // Verificar si el player está dentro del trigger de esta zona
+                if (zone.Config.zoneRoot != null)
                 {
-                    if (col.isTrigger && col.bounds.Contains(playerTransform.position))
+                    Collider[] colliders = zone.Config.zoneRoot.GetComponentsInChildren<Collider>();
+                    foreach (var col in colliders)
                     {
-                        currentZone = zone;
-                        return;
+                        if (col.isTrigger && col.bounds.Contains(playerTransform.position))
+                        {
+                            currentZone = zone;
+                            return;
+                        }
+                    }
+                    
+                    // Rastrear la zona más cercana como fallback
+                    Vector3 zoneWorldCenter = zone.Config.zoneRoot.transform.position + zone.Config.zoneCenter;
+                    float dist = Vector3.Distance(playerTransform.position, zoneWorldCenter);
+                    if (dist < closestDistance)
+                    {
+                        closestDistance = dist;
+                        closestZone = zone;
                     }
                 }
-                
-                // Rastrear la zona más cercana si no estamos dentro de ninguna
-                float dist = Vector3.Distance(playerTransform.position, zone.Config.zoneCenter);
-                if (dist < closestDistance)
+            }
+            
+            if (closestZone != null)
+                currentZone = closestZone;
+        }
+        else
+        {
+            // Fallback: si no hay Cell1SectorManager, buscar globalmente (para compatibilidad)
+            DynamicZone[] allZones = FindObjectsByType<DynamicZone>(FindObjectsSortMode.None);
+            DynamicZone closestZone = null;
+            float closestDistance = float.MaxValue;
+            
+            foreach (var zone in allZones)
+            {
+                if (zone.Config.zoneRoot != null)
                 {
-                    closestDistance = dist;
-                    closestZone = zone;
+                    Collider[] colliders = zone.Config.zoneRoot.GetComponentsInChildren<Collider>();
+                    foreach (var col in colliders)
+                    {
+                        if (col.isTrigger && col.bounds.Contains(playerTransform.position))
+                        {
+                            currentZone = zone;
+                            return;
+                        }
+                    }
+                    
+                    Vector3 zoneWorldCenter = zone.Config.zoneRoot.transform.position + zone.Config.zoneCenter;
+                    float dist = Vector3.Distance(playerTransform.position, zoneWorldCenter);
+                    if (dist < closestDistance)
+                    {
+                        closestDistance = dist;
+                        closestZone = zone;
+                    }
                 }
             }
+            
+            if (closestZone != null)
+                currentZone = closestZone;
         }
-        
-        if (closestZone != null)
-            currentZone = closestZone;
     }
 }

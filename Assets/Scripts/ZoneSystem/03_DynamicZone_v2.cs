@@ -165,10 +165,21 @@ public class DynamicZone : MonoBehaviour
         }
         
         // Obtener ZoneManager
-        zoneManager = FindAnyObjectByType<ZoneManager>();
-        if (zoneManager == null)
+        // PRIORITARIO: Buscar primero Cell1SectorManager (local)
+        var localSectorManager = GetComponentInParent<Cell1SectorManager>();
+        if (localSectorManager != null)
         {
-            Debug.LogError("[ZONE] No ZoneManager found in scene!", gameObject);
+            zoneManager = null;  // No usar ZoneManager global
+            Debug.Log($"[ZONE] {config.zoneName} usando Cell1SectorManager local (no ZoneManager global)", gameObject);
+        }
+        else
+        {
+            // Fallback: Buscar ZoneManager global
+            zoneManager = FindAnyObjectByType<ZoneManager>();
+            if (zoneManager == null)
+            {
+                Debug.LogWarning("[ZONE] No ZoneManager found in scene!", gameObject);
+            }
         }
         
         // SINCRONIZAR GEOMETRÍA: Asegurar que zoneCenter y zoneSize coincidan con colliders
@@ -336,18 +347,40 @@ public class DynamicZone : MonoBehaviour
             Debug.Log($"[ZONE] {config.zoneName} marked as DISCOVERED", gameObject);
             
             // Iniciar fade-in animado
+            // NO notificamos al ZoneManager aún - esperamos a que el fade termine
             StartFadeIn();
             
             OnFirstDiscovered?.Invoke(this);
+            
+            Debug.Log($"[ZONE] Player entered {config.zoneName} (fade-in starting, ZoneManager notified when fade completes)", gameObject);
         }
+        else
+        {
+            // La zona ya fue descubierta antes - notificar al ZoneManager INMEDIATAMENTE
+            // No hay fade-in pendiente
+            zoneManager?.OnPlayerEnteredZone(this);
+            
+            // Invocar evento local
+            OnPlayerEntered?.Invoke(this);
+            
+            Debug.Log($"[ZONE] Player re-entered {config.zoneName}", gameObject);
+        }
+    }
+    
+    /// <summary>
+    /// Se llama cuando el fade-in ha completado
+    /// Ahora es seguro notificar al ZoneManager y otros sistemas
+    /// que la zona está visualmente lista
+    /// </summary>
+    private void OnFadeInCompleted()
+    {
+        Debug.Log($"[FADE-IN] Fade completed for {config.zoneName}, notifying ZoneManager...", gameObject);
         
-        // Avisar al ZoneManager
+        // Avisar al ZoneManager (ahora sí, cuando el fade visual está completo)
         zoneManager?.OnPlayerEnteredZone(this);
         
         // Invocar evento local
         OnPlayerEntered?.Invoke(this);
-        
-        Debug.Log($"[ZONE] Player entered {config.zoneName}", gameObject);
     }
     
     private void OnPlayerExitedZone()
@@ -389,10 +422,22 @@ public class DynamicZone : MonoBehaviour
             return;
         
         ZoneState oldState = currentState;
+        
+        // Si transición Unknown→Active, iniciar fade-in PRIMERO
+        if (oldState == ZoneState.Unknown && newState == ZoneState.Active)
+        {
+            if (!isDiscovered)
+            {
+                isDiscovered = true;
+                Debug.Log($"[ZONE FADE] Starting fade-in for {config.zoneName}");
+                StartFadeIn();
+            }
+        }
+        
         currentState = newState;
         
-        // Aplicar cambios visuales/lógicos
-        ApplyZoneState(newState);
+        // Aplicar cambios visuales/lógicos (pasar estado anterior para transiciones suaves)
+        ApplyZoneState(newState, oldState);
         
         // Eventos
         OnStateChanged?.Invoke(this, oldState, newState);
@@ -412,16 +457,19 @@ public class DynamicZone : MonoBehaviour
     
     /// <summary>
     /// Aplicar cambios según el nuevo estado
-    /// 4 estados: Unknown, Wireframe, Dormant, Active
+    /// 2 estados: Unknown, Active
     /// 
-    /// IMPORTANTE: Durante un fade-in activo, preservamos el estado de renderers
-    /// para no interrumpir la animación
+    /// IMPORTANTE: Durante un fade-in activo o transición de descubrimiento,
+    /// preservamos el estado de renderers para no interrumpir la animación
     /// </summary>
-    private void ApplyZoneState(ZoneState state)
+    private void ApplyZoneState(ZoneState state, ZoneState oldState = ZoneState.Unknown)
     {
         // Si hay un fade-in en progreso, no cambiar render mode - dejar que continúe
+        // O si recién fue descubierta (Unknown→Active), preservar para que el fade-in comience suavemente
         const bool preserveRenderersWhileFading = true;
-        if (fadeInCoroutine != null && preserveRenderersWhileFading)
+        bool isBeingDiscovered = (oldState == ZoneState.Unknown && state == ZoneState.Active);
+        
+        if ((fadeInCoroutine != null || isBeingDiscovered) && preserveRenderersWhileFading)
         {
             // Solo cambiar estado no-visual mientras estamos con fade-in
             switch (state)
@@ -531,7 +579,7 @@ public class DynamicZone : MonoBehaviour
         // Collideres: mantener TODOS siempre activos
         // Triggers para detección de entrada/salida
         // Físicos para suelo, paredes, etc.
-        foreach (Collider col in config.zoneRoot.GetComponentsInChildren<Collider>())
+        foreach (Collider col in config.zoneRoot.GetComponentsInChildren<Collider>(includeInactive: true))
         {
             col.enabled = true;  // SIEMPRE ACTIVO
         }
@@ -553,7 +601,7 @@ public class DynamicZone : MonoBehaviour
     /// </summary>
     private void ApplyRenderMode(RenderMode mode)
     {
-        foreach (var renderer in config.zoneRoot.GetComponentsInChildren<Renderer>())
+        foreach (var renderer in config.zoneRoot.GetComponentsInChildren<Renderer>(includeInactive: true))
         {
             switch (mode)
             {
@@ -620,20 +668,59 @@ public class DynamicZone : MonoBehaviour
             StopCoroutine(fadeInCoroutine);
         }
         
+        // CRÍTICO: Unity no renderiza con GameObjects inactivos
+        // Si el zoneRoot está inactivo, sus renderers nunca renderizarán, sin importar el alpha
+        // SOLUCIÓN: 
+        // 1. Activar temporalmente el zoneRoot para buscar renderers
+        // 2. Desactivar solo los GameObjects hijos (no el root)
+        // 3. El root sigue activo = los renderers pueden renderizar
+        
+        bool rootWasActive = config.zoneRoot.activeSelf;
+        config.zoneRoot.SetActive(true);  // Necesario para que GetComponentsInChildren encuentre todo
+        
         // Asegurar que los renderers estén habilitados para poder mostrar el fade
-        foreach (var renderer in config.zoneRoot.GetComponentsInChildren<Renderer>())
+        int rendererCount = 0;
+        foreach (var renderer in config.zoneRoot.GetComponentsInChildren<Renderer>(includeInactive: true))
         {
             renderer.enabled = true;
+            rendererCount++;
             
             // IMPORTANTE: Instanciar todos los materiales para que los cambios de alpha
             // sean locales a estos renderers y no afecten otros GameObjects
-            // Esto previene que ApplyRenderMode() pierda el alpha durante la transición
             Material[] instancedMaterials = new Material[renderer.materials.Length];
             for (int i = 0; i < renderer.materials.Length; i++)
             {
                 instancedMaterials[i] = new Material(renderer.materials[i]);
+                
+                // FADE MODE: Para desvanecimiento correcto
+                // Según la documentación de Unity, uso "Fade" mode para objetos opacos que se desvanecen
+                instancedMaterials[i].shader = Shader.Find("Standard");
+                
+                // Cambiar a Fade rendering mode (no Transparent)
+                // Fade mode = opaque que se desvanece
+                // Transparent mode = reflectivo transparente
+                instancedMaterials[i].SetFloat("_Mode", 1f);  // 1 = Fade mode (0=Opaque, 2=Cutout, 3=Transparent)
+                instancedMaterials[i].SetOverrideTag("RenderType", "Fade");
+                instancedMaterials[i].SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                instancedMaterials[i].SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                instancedMaterials[i].SetInt("_ZWrite", 0);
+                instancedMaterials[i].renderQueue = 3000;
+                instancedMaterials[i].EnableKeyword("_ALPHABLEND_ON");
             }
             renderer.materials = instancedMaterials;
+        }
+        
+        Debug.Log($"[FADE-IN] Found {rendererCount} renderers in {config.zoneName} (Fade mode), starting animation", gameObject);
+        
+        // Si el root no estaba activo, NO lo reactivamos de golpe pero lo dejamos ACTIVO para que los renderers funcionen
+        // Solo desactivamos los hijos directos para mantener la estructura inactiva
+        if (!rootWasActive)
+        {
+            // Desactivar los hijos, pero NO el root
+            foreach (Transform child in config.zoneRoot.transform)
+            {
+                child.gameObject.SetActive(false);
+            }
         }
         
         // Inicializar alpha en 0 antes de empezar la animación
@@ -641,7 +728,7 @@ public class DynamicZone : MonoBehaviour
         
         // Iniciar corrutina de fade-in
         fadeInCoroutine = StartCoroutine(FadeInZone());
-        Debug.Log($"[FADE-IN] Starting fade-in for zone: {config.zoneName}", gameObject);
+        Debug.Log($"[FADE-IN] Starting fade-in for zone: {config.zoneName} (duration: {FADE_IN_DURATION}s)", gameObject);
     }
     
     /// <summary>
@@ -667,6 +754,9 @@ public class DynamicZone : MonoBehaviour
         fadeInCoroutine = null;
         
         Debug.Log($"[FADE-IN] Completed fade-in for zone: {config.zoneName}", gameObject);
+        
+        // AHORA notificar que el fade visual está completo
+        OnFadeInCompleted();
     }
     
     /// <summary>
@@ -675,7 +765,7 @@ public class DynamicZone : MonoBehaviour
     /// </summary>
     private void SetZoneAlpha(float alpha)
     {
-        foreach (var renderer in config.zoneRoot.GetComponentsInChildren<Renderer>())
+        foreach (var renderer in config.zoneRoot.GetComponentsInChildren<Renderer>(includeInactive: true))
         {
             foreach (var material in renderer.materials)
             {

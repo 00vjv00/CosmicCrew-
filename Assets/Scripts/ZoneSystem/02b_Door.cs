@@ -6,6 +6,17 @@
 using UnityEngine;
 
 /// <summary>
+/// Dirección de apertura de la puerta
+/// </summary>
+public enum DoorOpenDirection
+{
+    Up,    // Sube hacia arriba
+    Down,  // Baja hacia abajo
+    Left,  // Se mueve hacia la izquierda
+    Right  // Se mueve hacia la derecha
+}
+
+/// <summary>
 /// Puerta individual en el mapa
 /// Puede conectar dos zonas
 /// Genera eventos cuando se abre/cierra
@@ -13,14 +24,18 @@ using UnityEngine;
 public class Door : MonoBehaviour
 {
     [SerializeField] private DoorConfig config;
+    [SerializeField] private Transform[] doorLeaves;                    // Hojas de la puerta
+    [SerializeField] private DoorOpenDirection[] doorLeafDirections;    // Dirección de cada hoja
+    [SerializeField] private float openDistance = 2f;                   // Distancia en metros que se mueve
     
     private DoorState currentState = DoorState.Closed;
     private float stateTimer = 0f;
     
+    private Vector3[] closedPositions;  // Posiciones iniciales de las hojas
     private Animator doorAnimator;  // Si tiene animación
     private Collider doorCollider;
     
-    private ZoneManager zoneManager;
+    private Cell1SectorManager sectorManager;
     
     // ────────────────────────────────────────────────────────
     // EVENTOS - Se disparan cuando puerta cambia estado
@@ -49,7 +64,20 @@ public class Door : MonoBehaviour
     {
         doorAnimator = GetComponent<Animator>();
         doorCollider = GetComponent<Collider>();
-        zoneManager = Object.FindAnyObjectByType<ZoneManager>();
+        sectorManager = Cell1SectorManager.Instance;
+        
+        // Guardar posiciones iniciales de las hojas
+        if (doorLeaves != null && doorLeaves.Length > 0)
+        {
+            closedPositions = new Vector3[doorLeaves.Length];
+            for (int i = 0; i < doorLeaves.Length; i++)
+            {
+                if (doorLeaves[i] != null)
+                {
+                    closedPositions[i] = doorLeaves[i].localPosition;
+                }
+            }
+        }
         
         // Validar configuración
         if (config.zoneA == null || config.zoneB == null)
@@ -93,10 +121,13 @@ public class Door : MonoBehaviour
         // ¿Necesita llave?
         if (config.requiresKey)
         {
-            // Verificar si el opener tiene la llave
-            // (Implementar según tu sistema de inventario)
-            Debug.Log($"[DOOR] {config.doorName} requires key {config.keyRequired}", gameObject);
-            return false;
+            // Verificar si el opener tiene la llave en el InventorySystem
+            if (!InventorySystem.Instance.HasCrateKey)
+            {
+                Debug.Log($"[DOOR] {config.doorName} requires key {config.keyRequired} - player doesn't have it!", gameObject);
+                return false;
+            }
+            // Si llega aquí, el player tiene la llave - permitir apertura
         }
         
         // ════════════════════════════════════════════════════════════
@@ -109,10 +140,10 @@ public class Door : MonoBehaviour
         // EVENT: Comenzar a abrir
         OnDoorStartedOpening?.Invoke(this);
         
-        // EVENT: Avisar a ZoneManager para pre-cargar zona destino
-        if (zoneManager != null)
+        // EVENT: Precargar zona destino
+        if (sectorManager != null && config.zoneB != null)
         {
-            zoneManager.OnDoorStartedOpening(this);
+            config.zoneB.SetZoneState(ZoneState.Known);
         }
         
         // Audio
@@ -175,9 +206,9 @@ public class Door : MonoBehaviour
         
         OnDoorStartedOpening?.Invoke(this);
         
-        if (zoneManager != null)
+        if (sectorManager != null && config.zoneB != null)
         {
-            zoneManager.OnDoorStartedOpening(this);
+            config.zoneB.SetZoneState(ZoneState.Known);
         }
         
         PlaySound("door_force_open");
@@ -219,6 +250,25 @@ public class Door : MonoBehaviour
     private void UpdateOpening()
     {
         stateTimer += Time.deltaTime;
+        float progress = Mathf.Clamp01(stateTimer / config.openDuration);
+        
+        // Mover cada hoja según su dirección propia
+        if (doorLeaves != null && doorLeaves.Length > 0 && closedPositions != null)
+        {
+            for (int i = 0; i < doorLeaves.Length; i++)
+            {
+                if (doorLeaves[i] != null && i < doorLeafDirections.Length)
+                {
+                    Vector3 direction = GetDirectionVector(doorLeafDirections[i]);
+                    
+                    doorLeaves[i].localPosition = Vector3.Lerp(
+                        closedPositions[i],
+                        closedPositions[i] + direction * openDistance,
+                        progress
+                    );
+                }
+            }
+        }
         
         if (stateTimer >= config.openDuration)
         {
@@ -241,6 +291,25 @@ public class Door : MonoBehaviour
     private void UpdateClosing()
     {
         stateTimer += Time.deltaTime;
+        float progress = Mathf.Clamp01(stateTimer / config.closeDuration);
+        
+        // Volver a posición inicial (cada hoja según su dirección)
+        if (doorLeaves != null && doorLeaves.Length > 0 && closedPositions != null)
+        {
+            for (int i = 0; i < doorLeaves.Length; i++)
+            {
+                if (doorLeaves[i] != null && i < doorLeafDirections.Length)
+                {
+                    Vector3 direction = GetDirectionVector(doorLeafDirections[i]);
+                    
+                    doorLeaves[i].localPosition = Vector3.Lerp(
+                        closedPositions[i] + direction * openDistance,
+                        closedPositions[i],
+                        progress
+                    );
+                }
+            }
+        }
         
         if (stateTimer >= config.closeDuration)
         {
@@ -277,6 +346,21 @@ public class Door : MonoBehaviour
     {
         return (config.zoneA == z1 && config.zoneB == z2) ||
                (config.zoneA == z2 && config.zoneB == z1);
+    }
+    
+    /// <summary>
+    /// Obtener el vector de dirección según una DoorOpenDirection
+    /// </summary>
+    private Vector3 GetDirectionVector(DoorOpenDirection direction)
+    {
+        return direction switch
+        {
+            DoorOpenDirection.Up => Vector3.up,
+            DoorOpenDirection.Down => Vector3.down,
+            DoorOpenDirection.Left => Vector3.left,
+            DoorOpenDirection.Right => Vector3.right,
+            _ => Vector3.up
+        };
     }
     
     /// <summary>
