@@ -86,6 +86,16 @@ UpgradeLog*.XML
 ehthumbs.db
 Thumbs.db
 
+# Unity Assets to ignore
+Assets/Materials/
+Assets/mat/
+Assets/docs/
+Assets/Prefabs/
+Assets/Cobble Games/
+Assets/_Recovery/
+_Recovery/
+Cobble Games/
+
 # Node modules (if using any Node-based build tools)
 node_modules/
 package-lock.json
