@@ -1,0 +1,733 @@
+LEYENDA DE SEÑALÉTICA
+─────────────────────────────────────────────
+<código>     condición necesaria para lo que sigue (debe tenerse antes)
+[código]     puerta donde se usa/consume el código
+->           camino o siguiente paso
+-->          recompensa obtenida
+|--          paso secuencial dentro de la sala
+OPCION       salida navegable desde esa sala
+*            elemento especial (Tool, objeto único)
+!!           zona con mecánica especial de entorno
+─────────────────────────────────────────────
+
+
+PRÓLOGO
+C1 (aleatorio, jugador) + C2 (aleatorio, a rescatar)
+Objetivo: Liberar C2 y salir del Sector Alta Seguridad
+
+
+══════════════════════════════════════════════
+SECTOR ALTA SEGURIDAD (AS)
+Fase 1: Despertar
+══════════════════════════════════════════════
+
+
+AS_Cell_0 — Celda 0
+Enemies: 1 low
+|-- CutScene: Liberación por golpe de asteroide y fallo técnico
+|-- Tutorial: Movimiento básico
+|-- Tutorial: Combate + Poder ofensivo -> Tutorial adquisición código --> AS_p1
+|-- [AS_p1] Abrir la puerta
+|-- Encontrar código --> AS_p2
+|-- <Poder defensivo> Camino oculto -> AS_Secreto_A
+
+        OPCION          AS_AccC_0 — Acceso Celda 0
+
+
+────────────────────────────────────────────
+
+AS_AccC_0 — Acceso Celda 0
+Enemies: 2 low
+|-- [AS_p2]
+|-- Tutorial: Stealth x2
+|-- <Poder defensivo> Tutorial camino oculto
+        |-- AS_PUp -> Carga de PowerUp --> PowerUp
+|-- Tutorial: INFO computadora
+|-- Tutorial: Uso PowerUp -> Combate con PowerUp --> AS_p3
+
+        OPCION          AS_Disct_1 — Distribuidor Piso 1
+        OPCION          AS_Cell_0 — Celda 0
+
+
+────────────────────────────────────────────
+
+AS_Disct_1 — Distribuidor Piso 1
+Enemies: 1 low, 1 high
+|-- [AS_p3]
+|-- Combate / Stealth x2
+        |-- Derrotar high --> AS_p10a
+        --> AS_Asc, AS_p4, AS_p6
+
+        OPCION          AS_AccC_1 — Acceso Celda 1
+        OPCION          ASCENSOR [AS_Asc]
+        OPCION          AS_AccC_0 — Acceso Celda 0
+
+
+────────────────────────────────────────────
+
+AS_AccC_1 — Acceso Celda 1
+Enemies: 2 low
+|-- [AS_p4]
+|-- Combate / Stealth x2 --> AS_Asc
+|-- INFO computadora
+|-- <HACK compu> -> AS_Cell_1 — Celda 1
+
+        OPCION          AS_Cell_1 — Celda 1
+
+
+────────────────────────────────────────────
+
+AS_Cell_1 — Celda 1
+Objetivo prólogo: Liberar C2
+|-- <AS_p10a + AS_p10b> Activar CompC2 --> CutScene liberación C2
+
+        OPCION          AS_AccC_1 — Acceso Celda 1
+
+
+────────────────────────────────────────────
+
+ASCENSOR AS
+|-- [AS_Asc]
+
+        OPCION          PASARELA_Dist
+        OPCION          AS_Dist_0 — Distribuidor Piso 0
+        OPCION          AS_Disct_1 — Distribuidor Piso 1
+
+
+────────────────────────────────────────────
+
+AS_Dist_0 — Distribuidor Piso 0
+Enemies: 1 low, 1 high
+|-- [AS_p3]
+|-- Combate / Stealth x2
+        |-- Derrotar high --> AS_p10b
+        --> AS_Asc
+
+        OPCION          Corredor Norte -> EJE0_Corredor
+        OPCION          Corredor Sur [AS_p6] -> AS_Secreto_B
+        OPCION          ASCENSOR AS [AS_Asc]
+
+
+────────────────────────────────────────────
+
+AS_Secreto_B — Sala Secreta Sur (dead end)
+|-- [AS_p6]
+|-- --> PowerUp
+|-- --> *Tool
+
+
+────────────────────────────────────────────
+
+PASARELA_Dist
+Enemies: 1 high, 1 dron
+|-- Tutorial: Enemigos drones
+|-- Combate / Stealth x2
+|-- --> *Mapa de zona
+
+        OPCION          ASCENSOR AS
+        OPCION          EJE0_P2 — Edificio Eje 0, Piso 2
+
+
+══════════════════════════════════════════════
+EDIFICIO EJE 0
+══════════════════════════════════════════════
+
+
+EJE0_Corredor — Corredor Norte
+Enemies: 1 low
+|-- Combate / Stealth
+
+        OPCION          AS_Dist_0 — Distribuidor Piso 0
+        OPCION          EJE0_P0 — Edificio Eje 0, Piso 0
+
+
+────────────────────────────────────────────
+
+EJE0_P0 — Edificio Eje 0, Piso 0
+Enemies: 1 low, 1 dron
+|-- INFO computadora --> códigos, información
+|-- <poder salto / poder específico> -> EJE0_P1
+
+        OPCION          ASCENSOR EJE0 [EJE0_Asc] -> EJE0_P2
+        OPCION          EJE0_Corredor — Corredor Norte
+
+
+────────────────────────────────────────────
+
+EJE0_P1 — Edificio Eje 0, Piso 1
+!! Acceso solo por salto o poder especial desde EJE0_P0
+|-- Exploración
+
+        OPCION          EJE0_PasN — Pasarela Norte
+        OPCION          EJE0_PasS — Pasarela Sur
+
+
+────────────────────────────────────────────
+
+EJE0_P2 — Edificio Eje 0, Piso 2 / Techo
+Enemies: 1 high, 1 dron
+|-- Combate / Stealth x2
+
+        OPCION          PASARELA_Dist
+        OPCION          ASCENSOR EJE0 [EJE0_Asc]
+
+
+────────────────────────────────────────────
+
+EJE0_PasN — Pasarela Norte
+|-- Combate / Stealth
+
+        OPCION          EJE0_MirNO — Mirador Noroeste
+        OPCION          EJE0_MirNE — Mirador Noreste
+
+
+EJE0_MirNO — Mirador Noroeste
+|-- Exploración / INFO
+
+        OPCION          EJE0_PasN — Pasarela Norte
+
+
+EJE0_MirNE — Mirador Noreste
+|-- Exploración / INFO
+
+        OPCION          EJE0_PasN — Pasarela Norte
+
+
+────────────────────────────────────────────
+
+EJE0_PasS — Pasarela Sur
+|-- Combate / Stealth
+
+        OPCION          EJE0_MirSO — Mirador Suroeste
+        OPCION          EJE0_MirSE — Mirador Sureste
+
+
+EJE0_MirSE — Mirador Sureste
+|-- Exploración / INFO
+
+        OPCION          EJE0_PasS — Pasarela Sur
+
+
+EJE0_MirSO — Mirador Suroeste
+|-- Exploración / INFO
+|-- Escaleras -> SOT_P0 — Sótano Piso 0
+|-- Escaleras -> EJE0_P2 — Edificio Eje 0, Piso 2
+
+        OPCION          EJE0_PasS — Pasarela Sur
+
+
+══════════════════════════════════════════════
+SÓTANO Y ZONA DE LUMEN
+══════════════════════════════════════════════
+
+
+SOT_P0 — Sótano
+!! Zona de baja energía
+Enemies: 1 low
+|-- Exploración
+
+        OPCION          SOT_Laser_A — Sala Barrido Láser A
+        OPCION          SOT_Interrogatorio — Sala de Interrogatorios
+        OPCION          ASCENSOR SÓTANO -> TC_P2 — Torre de Control Piso 2
+
+
+────────────────────────────────────────────
+
+SOT_Laser_A — Sala Barrido Láser A
+!! Barrido láser activo
+|-- Superar barrido láser (timing / poder)
+
+        OPCION          SOT_CtrlCelda — Sala Control Celda Incomunicada
+        OPCION          SOT_P0 — Sótano
+
+
+────────────────────────────────────────────
+
+SOT_CtrlCelda — Sala Control Celda Incomunicada
+!! Sin energía — no hackeable a distancia
+Enemies: 1 guardián mecánico / vapor
+|-- <acceso mecánico> Combate guardián
+|-- Abrir celda mecánicamente --> liberar LUMEN
+
+        OPCION          SOT_Laser_B — Sala Barrido Láser B
+        OPCION          SOT_Laser_A — Sala Barrido Láser A
+
+
+────────────────────────────────────────────
+
+SOT_Laser_B — Sala Barrido Láser B
+!! Barrido láser activo
+|-- Superar barrido láser (timing / poder)
+
+        OPCION          SOT_TC — Sótano Torre de Control
+        OPCION          SOT_CtrlCelda — Sala Control Celda Incomunicada
+
+
+────────────────────────────────────────────
+
+SOT_Interrogatorio — Sala de Interrogatorios
+Enemies: 1 low, 1 high
+|-- Combate / Stealth
+|-- INFO / logs narrativos
+|-- <rescate> Liberar C en enfermería --> C rescatado
+
+        OPCION          SOT_Enfermeria — Enfermería
+        OPCION          SOT_P0 — Sótano
+
+
+SOT_Enfermeria — Enfermería
+|-- INFO / suministros
+|-- Liberar C (instanciado aleatoriamente)
+
+        OPCION          SOT_Interrogatorio — Sala de Interrogatorios
+
+
+══════════════════════════════════════════════
+TORRE DE CONTROL
+══════════════════════════════════════════════
+
+
+SOT_TC — Sótano Torre de Control
+Enemies: 1 low
+|-- Exploración
+
+        OPCION          TC_P0 — Torre de Control Piso 0
+        OPCION          ASCENSOR SÓTANO -> TC_P2
+        OPCION          SOT_Laser_B — Sala Barrido Láser B
+
+
+────────────────────────────────────────────
+
+TC_P0 — Torre de Control Piso 0
+!! Espacio abierto con plataformas
+Enemies: 2 low, 1 high — patrulla + refuerzo
+|-- Combate / Stealth
+|-- Plataformas -> TC_P1
+
+        OPCION          TC_P1 — Torre de Control Piso 1
+        OPCION          PASARELA_TC -> PASARELA_Dist
+        OPCION          SOT_TC — Sótano Torre de Control
+
+
+────────────────────────────────────────────
+
+TC_P1 — Torre de Control Piso 1
+!! Espacio abierto con plataformas
+Enemies: 2 low, 1 high — patrulla + refuerzo
+|-- Combate / Stealth
+|-- Plataformas -> TC_P2
+
+        OPCION          TC_P2 — Torre de Control Piso 2
+        OPCION          TC_P0 — Torre de Control Piso 0
+        OPCION          PASARELA_TC -> EJE0_P2
+
+
+────────────────────────────────────────────
+
+TC_P2 — Torre de Control Piso 2
+Enemies: 1 high, 1 dron — alta resistencia
+|-- Combate / Stealth x2
+|-- Posible liberación de C (instanciado aleatoriamente)
+
+        OPCION          TC_P1 — Torre de Control Piso 1
+        OPCION          ASCENSOR SÓTANO -> SOT_TC
+        OPCION          MURO_EXT — Muro Extremo del Sector
+
+
+────────────────────────────────────────────
+
+MURO_EXT — Muro Extremo del Sector
+|-- Traversal / Combate
+
+        OPCION          TC_P2 — Torre de Control Piso 2
+        OPCION          ACC_SECTOR — Sala Acceso/Salida del Sector
+
+
+────────────────────────────────────────────
+
+ACC_SECTOR — Sala Acceso/Salida del Sector
+Objetivo Capítulo I: Salir del Sector Alta Seguridad
+|-- Posible liberación de C (instanciado aleatoriamente)
+
+        OPCION          ALA_B — Ala B (simétrica) -> SECTOR SIGUIENTE
+        OPCION          ALA_A — Ala A (tropas) -> [imposible en Cap. I]
+        OPCION          MURO_EXT — Muro Extremo del Sector
+
+
+══════════════════════════════════════════════
+ALA B — SALIDA OBJETIVO
+══════════════════════════════════════════════
+
+Estructura simétrica al Ala A (Torre de Control / Eje / Sótano)
+Sin sala de interrogatorios
+Sin tropas en pisos 0 y 1 de Torre de Control
+|-- SOT_Mant_A — Sala de Mantenimiento A  (en lugar de Interrogatorios)
+|-- SOT_Mant_B — Sala de Mantenimiento B  (en lugar de Tropas)
+|-- Salida -> SECTOR SIGUIENTE            (objetivo final Cap. I)
+
+
+══════════════════════════════════════════════
+ACCIONES GENERALES
+══════════════════════════════════════════════
+|-- Abrir puerta
+|-- Derrotar o sortear enemigos
+|-- Adquirir códigos de acceso (en crate o derrotando enemigo)
+|-- Activar / hackear dispositivos
+|-- Encontrar camino oculto
+|-- Encontrar secreto
+|-- Cargar energía
+|-- Liberar personaje
+|-- Usar / combinar poderes
+
+
+
+
+
+
+
+
+
+══════════════════════════════════════════════
+RESCATE C3 — Sala de Pruebas / Interrogatorio / Enfermería
+Momento cumbre: primera fusión obligatoria
+══════════════════════════════════════════════
+
+
+SOT_P0 — Sótano
+|-- ...
+        OPCION          SOT_Pruebas — Sala de Pruebas y Torturas
+        OPCION          SOT_Interrogatorio — Sala de Interrogatorios
+        OPCION          (resto de opciones del sótano)
+
+
+────────────────────────────────────────────
+
+SOT_Pruebas — Sala de Pruebas y Torturas
+!! Entrada obligatoria en stealth — detección = combate imposible
+!! Primera fusión obligatoria del juego
+Enemies: 2 low (patrulla)
+|-- CutScene: los jugadores observan la situación a través de una
+    abertura / cristal — dos high en interrogatorio, C3 en enfermería
+|-- Tutorial fusión: la situación exige unir poderes
+|-- <Stealth> Neutralizar patrulla sin ser detectado
+|-- Fusión de C1 + C2 --> personaje fusionado activo
+|-- CutScene salida: los dos personajes fusionados irrumpen
+    en interrogatorio
+
+        OPCION          SOT_Interrogatorio — Sala de Interrogatorios
+        OPCION          SOT_P0 — Sótano
+
+
+────────────────────────────────────────────
+
+SOT_Interrogatorio — Sala de Interrogatorios
+!! Combate con personaje fusionado activo
+Enemies: 2 high
+|-- Combate fusionado x2 --> código SOT_Enf
+|-- <fin fusión> personajes se separan tras combate
+|-- INFO / logs narrativos --> pista ubicación C3
+|-- [SOT_Enf] Abrir acceso a enfermería
+
+        OPCION          SOT_Enfermeria — Enfermería
+        OPCION          SOT_Pruebas — Sala de Pruebas y Torturas
+        OPCION          SOT_P0 — Sótano
+
+
+────────────────────────────────────────────
+
+SOT_Enfermeria — Enfermería
+!! Zona sin combate activo
+Enemies: 1 low (guardia pasivo)
+|-- Combate / Stealth guardia
+|-- Interactuar con C3 --> CutScene rescate
+|-- Suministros médicos --> recuperación de energía / PowerUp
+|-- INFO computadora --> logs médicos / información narrativa
+
+        OPCION          SOT_Interrogatorio — Sala de Interrogatorios
+
+
+────────────────────────────────────────────
+
+NOTAS DE DISEÑO
+─────────────────────────────────────────────
+- SOT_Pruebas es la única sala del juego hasta este punto
+  donde el stealth no es opcional sino condición de progreso:
+  si el jugador es detectado antes de fusionarse, el combate
+  es inviable, forzando reinicio o retirada
+- La CutScene desde la abertura/cristal hace que el jugador
+  entienda la amenaza antes de enfrentarla, la fusión nace
+  de la necesidad, no del tutorial
+- La separación tras el combate es automática, la fusión
+  se agota, reforzando que es un recurso limitado y valioso
+- El código SOT_Enf lo portan los dos high, necesitas
+  derrotarlos a ambos para obtenerlo
+- Los logs médicos en enfermería pueden revelar información
+  sobre Lumen o el estado del sector (a definir narrativamente)
+- Suministros médicos justifican volver a Enfermería
+  después del rescate como zona de recarga
+
+
+
+
+  ══════════════════════════════════════════════
+RESCATE C4 — Celda Ala B
+══════════════════════════════════════════════
+ 
+ 
+ACC_SECTOR — Sala Acceso/Salida del Sector
+|-- ...
+        OPCION          ALA_B_TC_P2 — Ala B, Torre de Control Piso 2
+ 
+ 
+────────────────────────────────────────────
+ 
+ALA_B_TC_P2 — Ala B, Torre de Control Piso 2
+!! Estructura simétrica a TC_P2 del Ala A
+!! Sin alta resistencia armada — zona más silenciosa
+Enemies: 1 low, 1 dron
+|-- Combate / Stealth x2
+ 
+        OPCION          ALA_B_TC_P1 — Ala B, Torre de Control Piso 1
+        OPCION          ACC_SECTOR — Sala Acceso/Salida del Sector
+ 
+ 
+────────────────────────────────────────────
+ 
+ALA_B_TC_P1 — Ala B, Torre de Control Piso 1
+!! Espacio abierto con plataformas
+!! Sin tropas permanentes — patrulla ligera
+Enemies: 1 low
+|-- Combate / Stealth
+ 
+        OPCION          ALA_B_TC_P0 — Ala B, Torre de Control Piso 0
+        OPCION          ALA_B_TC_P2 — Ala B, Torre de Control Piso 2
+        OPCION          PASARELA_TC_B -> EJE0_P2
+ 
+ 
+────────────────────────────────────────────
+ 
+ALA_B_TC_P0 — Ala B, Torre de Control Piso 0
+!! Espacio abierto con plataformas
+Enemies: 1 low
+|-- Combate / Stealth
+|-- INFO computadora --> código ALA_B_Asc
+ 
+        OPCION          ALA_B_SOT — Ala B, Sótano
+        OPCION          ALA_B_TC_P1 — Ala B, Torre de Control Piso 1
+        OPCION          ASCENSOR ALA B [ALA_B_Asc] -> ALA_B_TC_P2
+ 
+ 
+────────────────────────────────────────────
+ 
+ALA_B_SOT — Ala B, Sótano
+!! Zona tranquila — sin barrido láser
+Enemies: 1 low
+|-- Exploración
+|-- INFO computadora --> logs / información narrativa
+ 
+        OPCION          ALA_B_Mant_A — Sala de Mantenimiento A
+        OPCION          ALA_B_Mant_B — Sala de Mantenimiento B
+        OPCION          ALA_B_Dist — Ala B, Distribuidor
+ 
+ 
+────────────────────────────────────────────
+ 
+ALA_B_Mant_A — Sala de Mantenimiento A
+!! Sin enemigos — zona de recursos
+|-- Suministros --> PowerUp / energía
+|-- INFO computadora --> código ALA_B_AccC4
+ 
+        OPCION          ALA_B_SOT — Ala B, Sótano
+ 
+ 
+────────────────────────────────────────────
+ 
+ALA_B_Mant_B — Sala de Mantenimiento B
+!! Sin enemigos — zona de recursos
+|-- Suministros --> PowerUp / herramienta
+|-- --> *Tool (a definir)
+ 
+        OPCION          ALA_B_SOT — Ala B, Sótano
+ 
+ 
+────────────────────────────────────────────
+ 
+ALA_B_Dist — Ala B, Distribuidor
+Enemies: 1 low, 1 high
+|-- Combate / Stealth x2
+        |-- Derrotar high --> ALA_B_p_extra
+ 
+        OPCION          ALA_B_AccC4 — Ala B, Acceso Celda C4
+        OPCION          ALA_B_SOT — Ala B, Sótano
+        OPCION          SALIDA_SECTOR -> SECTOR SIGUIENTE
+ 
+ 
+────────────────────────────────────────────
+ 
+ALA_B_AccC4 — Ala B, Acceso Celda C4
+!! Sala de control de celda
+Enemies: 2 low
+|-- [ALA_B_AccC4] Abrir acceso
+|-- Combate / Stealth x2
+|-- INFO computadora --> estado de C4
+|-- <HACK compu> -> ALA_B_Cell_C4
+ 
+        OPCION          ALA_B_Cell_C4 — Ala B, Celda C4
+        OPCION          ALA_B_Dist — Ala B, Distribuidor
+ 
+ 
+────────────────────────────────────────────
+ 
+ALA_B_Cell_C4 — Ala B, Celda C4
+!! Celda estándar — C4 en buen estado
+|-- Interactuar con C4 --> CutScene rescate
+|-- C4 se une al grupo --> poder C4 disponible
+ 
+        OPCION          ALA_B_AccC4 — Ala B, Acceso Celda C4
+ 
+ 
+────────────────────────────────────────────
+ 
+NOTAS DE DISEÑO
+─────────────────────────────────────────────
+- El Ala B es deliberadamente más tranquila que el Ala A:
+  menos enemigos, sin barrido láser, sin tropas permanentes.
+  El jugador llega aquí tarde en el capítulo, con el grupo
+  formado, y el contraste refuerza que está cerca de la salida
+- El código ALA_B_AccC4 está en la computadora de Mant_A,
+  obligando a explorar el sótano antes de ir a la celda
+- Las dos salas de mantenimiento son zonas de respiro y recursos
+  tras la dureza del Ala A y el sótano de Lumen
+- ALA_B_p_extra del high del Distribuidor queda abierto,
+  puede ser un código, un ítem narrativo o acceso a zona
+  secreta del Ala B a definir
+- La salida al Sector Siguiente está en el Distribuidor del Ala B,
+  no en ACC_SECTOR, reforzando que el jugador debe bajar
+  y atravesar el ala completa para salir
+
+
+
+
+
+
+  ══════════════════════════════════════════════
+RESCATE LUMEN — Clímax Capítulo I
+Requiere: los 4 personajes rescatados previamente
+══════════════════════════════════════════════
+
+
+SOT_P0 — Sótano
+|-- ...
+        OPCION          SOT_Pruebas — Sala de Pruebas (ya visitada)
+        OPCION          SOT_Laser_A — Sala Barrido Láser A
+
+
+────────────────────────────────────────────
+
+SOT_Laser_A — Sala Barrido Láser A
+!! Barrido láser activo — sin poder específico es infranqueable
+!! Obstáculo 1: desactivar / superar barrido láser
+|-- <poder personaje X> Desactivar / superar barrido láser A
+|-- CutScene: el grupo ve por primera vez la zona oscura al fondo
+
+        OPCION          SOT_CtrlCelda — Sala Control Celda Incomunicada
+        OPCION          SOT_P0 — Sótano
+
+
+────────────────────────────────────────────
+
+SOT_CtrlCelda — Sala Control Celda Incomunicada
+!! Sin energía — no hackeable, no hay luz
+!! Obstáculo 2: neutralizar guardián en oscuridad
+!! Obstáculo 3: abrir puerta mecánica
+Enemies: 1 guardián mecánico / vapor
+|-- CutScene: la oscuridad es total, el grupo percibe presencia
+|-- <poder personaje Y> Neutralizar guardián en oscuridad
+|-- <Stone> Fuerza bruta -> abrir puerta mecánica
+|-- CutScene: Lumen está dentro, debilitado, absorbe la energía
+    residual del guardián derrotado y se reactiva lentamente
+|-- Lumen se une al grupo --> poder Lumen disponible
+|-- <Lumen> La zona se ilumina parcialmente
+|-- <Lumen> Sistemas cercanos se recargan --> acceso a SOT_Laser_B
+
+        OPCION          SOT_Laser_B — Sala Barrido Láser B
+        OPCION          SOT_Laser_A — Sala Barrido Láser A
+
+
+────────────────────────────────────────────
+
+SOT_Laser_B — Sala Barrido Láser B
+!! Barrido láser activo
+!! Obstáculo 4: desactivar / superar barrido láser
+|-- <Lumen> Absorber energía del sistema láser -> desactivado
+    --> Lumen gana energía, sistema queda inutilizado
+|-- Paso libre hacia sótano Torre de Control
+
+        OPCION          SOT_TC — Sótano Torre de Control
+        OPCION          SOT_CtrlCelda — Sala Control Celda Incomunicada
+
+
+────────────────────────────────────────────
+
+NOTAS DE DISEÑO
+─────────────────────────────────────────────
+- Los obstáculos 1 y 2 quedan sin personaje asignado
+  hasta definir los cinco poderes completos; el diseño
+  garantiza que cualquier orden de rescate previo
+  deja al menos un personaje capaz de resolver cada uno
+- Stone es imprescindible para el obstáculo 3,
+  pero no necesita ser el último rescatado antes de Lumen,
+  solo tiene que estar en el grupo cuando se llega aquí
+- La CutScene de Lumen absorbiendo al guardián es su
+  presentación de poder: el jugador ve inmediatamente
+  para qué sirve antes de controlarlo
+- Lumen desactiva SOT_Laser_B nada más unirse, convirtiendo
+  su rescate en una recompensa inmediata y funcional,
+  no solo narrativa
+- Tras el rescate de Lumen el grupo está completo:
+  el camino hacia ACC_SECTOR y la salida queda abierto
+
+
+  ══════════════════════════════════════════════
+C2 — LIBERACIÓN Y OPCIONES
+Poder: a definir
+══════════════════════════════════════════════
+
+
+──────────────────────────────────────────────
+LIBERACIÓN
+──────────────────────────────────────────────
+
+AS_Cell_1 — Celda 1
+|-- <AS_p10a + AS_p10b> Activar CompC2 --> CutScene liberación C2
+|-- Jugador elige: controlar C2 o mantener C1
+
+        OPCION          AS_AccC_1 — Acceso Celda 1
+
+
+──────────────────────────────────────────────
+RUTAS DISPONIBLES TRAS LIBERACIÓN
+──────────────────────────────────────────────
+
+Desde AS_AccC_1 el grupo tiene acceso al sector completo
+según el estado de progresión en ese momento:
+
+|-- Si [AS_Asc] obtenido -> ASCENSOR AS disponible
+        -> AS_Dist_0, PASARELA_Dist
+|-- Si no -> retorno por AS_Disct_1 hacia ASCENSOR AS
+
+Zonas pendientes de visitar según orden de rescate:
+|-- EJE0 y estructura de Eje
+|-- Sótano y rescate de C3 / Lumen
+|-- Torre de Control y Ala B
+|-- Rescate C4 Ala B
+
+
+──────────────────────────────────────────────
+NOTAS DE DISEÑO
+──────────────────────────────────────────────
+- C2 es el primer rescatado, el jugador lleva poco tiempo
+  con dos personajes activos: la elección de a quién controlar
+  es el primer momento real de gestión del grupo
+- Las aportaciones específicas de C2 por poder se documentan
+  cuando estén los cinco poderes definidos

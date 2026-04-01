@@ -1,0 +1,25 @@
+A partir de cierto ángulo de inclinación (aproximadamente 20° desde la posición inicial), la perspectiva se vuelve tan sesgada que:
+
+Es difícil orientarse visualmente
+El control táctil se vuelve confuso (qué es "arriba" en pantalla vs. en el mundo)
+La jugabilidad se degrada significativamente
+
+Entonces ese sería el punto crítico donde la cámara debe hacer algo para recuperar la claridad visual.
+¿En ese momento la cámara se convierte en "hija de la estación" y acompaña la rotación + movimiento simultáneamente para mantener la perspectiva isométrica legible?exactamente. Si la rotación se reversa o el jugador se desplaza en el otro sentido, llegará un momento en que la rotación baja de esos 20; en eso momento la camara deja de ser hija del escenario y s emantiene fija. ¿Sí?19 marSí, perfecto. Es un sistema de umbral dinámico:
+
+Inclinación < 20° → Cámara fija (no es hija de la estación)
+Inclinación ≥ 20° → Cámara se convierte en hija de la estación (acompaña rotación)
+Inclinación desciende por debajo de 20° → Cámara vuelve a ser fija
+
+Es como un mecanismo automático de estabilización que mantiene la jugabilidad legible sin intervención del jugador, pero permitiendo que la inclinación sea una mecánica de dificultad mientras el jugador la pueda controlar.
+
+
+✅ Rotación de cámara:
+
+Cámara fija en perspectiva isométrica (no rota con el jugador)
+El escenario se inclina por rotación de la estación (cilindro)
+Inclinación aumenta/disminuye según movimiento del jugador vs. sentido de rotación
+En ~20° de inclinación: cámara se ancla a la estación para mantener legibilidad
+Cuando baja de 20°: cámara vuelve a ser independiente
+
+Sistema de umbral automático que equilibra dificultad + jugabilidad.

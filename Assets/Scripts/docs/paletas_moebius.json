@@ -1,0 +1,500 @@
+{
+  "MOEBIUS_CLASICO": [
+    {
+      "name": "Negro Profundo",
+      "hex": "#0a0a0a",
+      "rgb": [
+        10,
+        10,
+        10
+      ]
+    },
+    {
+      "name": "Azul Marino",
+      "hex": "#1a3a52",
+      "rgb": [
+        26,
+        58,
+        82
+      ]
+    },
+    {
+      "name": "Azul Cielo",
+      "hex": "#4a7ba7",
+      "rgb": [
+        74,
+        123,
+        167
+      ]
+    },
+    {
+      "name": "Verde Oscuro",
+      "hex": "#2d5a3d",
+      "rgb": [
+        45,
+        90,
+        61
+      ]
+    },
+    {
+      "name": "Verde Bosque",
+      "hex": "#5a8a6f",
+      "rgb": [
+        90,
+        138,
+        111
+      ]
+    },
+    {
+      "name": "Tierra",
+      "hex": "#8b6f47",
+      "rgb": [
+        139,
+        111,
+        71
+      ]
+    },
+    {
+      "name": "Ocre",
+      "hex": "#c9a961",
+      "rgb": [
+        201,
+        169,
+        97
+      ]
+    },
+    {
+      "name": "Gris Medio",
+      "hex": "#7a7a7a",
+      "rgb": [
+        122,
+        122,
+        122
+      ]
+    },
+    {
+      "name": "Blanco Marfil",
+      "hex": "#f5f1e8",
+      "rgb": [
+        245,
+        241,
+        232
+      ]
+    }
+  ],
+  "THE_INCAL": [
+    {
+      "name": "Negro Absoluto",
+      "hex": "#000000",
+      "rgb": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "P\u00farpura Profundo",
+      "hex": "#3d1a4f",
+      "rgb": [
+        61,
+        26,
+        79
+      ]
+    },
+    {
+      "name": "Magenta Vibrante",
+      "hex": "#c41e3a",
+      "rgb": [
+        196,
+        30,
+        58
+      ]
+    },
+    {
+      "name": "Rojo \u00d3xido",
+      "hex": "#8b3a3a",
+      "rgb": [
+        139,
+        58,
+        58
+      ]
+    },
+    {
+      "name": "Dorado",
+      "hex": "#daa520",
+      "rgb": [
+        218,
+        165,
+        32
+      ]
+    },
+    {
+      "name": "Naranja Quemado",
+      "hex": "#cc5500",
+      "rgb": [
+        204,
+        85,
+        0
+      ]
+    },
+    {
+      "name": "Amarillo P\u00e1lido",
+      "hex": "#fffacd",
+      "rgb": [
+        255,
+        250,
+        205
+      ]
+    },
+    {
+      "name": "Ci\u00e1n Oscuro",
+      "hex": "#004d4d",
+      "rgb": [
+        0,
+        77,
+        77
+      ]
+    },
+    {
+      "name": "Blanco Crema",
+      "hex": "#fffef0",
+      "rgb": [
+        255,
+        254,
+        240
+      ]
+    }
+  ],
+  "ARZACH": [
+    {
+      "name": "Gris Acero",
+      "hex": "#36454f",
+      "rgb": [
+        54,
+        69,
+        79
+      ]
+    },
+    {
+      "name": "Azul Pastel",
+      "hex": "#6fb3d9",
+      "rgb": [
+        111,
+        179,
+        217
+      ]
+    },
+    {
+      "name": "Turquesa Suave",
+      "hex": "#7fd8d8",
+      "rgb": [
+        127,
+        216,
+        216
+      ]
+    },
+    {
+      "name": "Beige Arena",
+      "hex": "#c2b280",
+      "rgb": [
+        194,
+        178,
+        128
+      ]
+    },
+    {
+      "name": "Marr\u00f3n Claro",
+      "hex": "#a0826d",
+      "rgb": [
+        160,
+        130,
+        109
+      ]
+    },
+    {
+      "name": "Verde Menta",
+      "hex": "#98ff98",
+      "rgb": [
+        152,
+        255,
+        152
+      ]
+    },
+    {
+      "name": "Lavanda",
+      "hex": "#e6e6fa",
+      "rgb": [
+        230,
+        230,
+        250
+      ]
+    },
+    {
+      "name": "Gris Suave",
+      "hex": "#d3d3d3",
+      "rgb": [
+        211,
+        211,
+        211
+      ]
+    },
+    {
+      "name": "Blanco Puro",
+      "hex": "#ffffff",
+      "rgb": [
+        255,
+        255,
+        255
+      ]
+    }
+  ],
+  "BLUEBERRY": [
+    {
+      "name": "Azul Profundo",
+      "hex": "#00008b",
+      "rgb": [
+        0,
+        0,
+        139
+      ]
+    },
+    {
+      "name": "Azul Medianoche",
+      "hex": "#191970",
+      "rgb": [
+        25,
+        25,
+        112
+      ]
+    },
+    {
+      "name": "Naranja Madera",
+      "hex": "#a0522d",
+      "rgb": [
+        160,
+        82,
+        45
+      ]
+    },
+    {
+      "name": "Siena Quemada",
+      "hex": "#8b4513",
+      "rgb": [
+        139,
+        69,
+        19
+      ]
+    },
+    {
+      "name": "Rojo Tostado",
+      "hex": "#bc3f3f",
+      "rgb": [
+        188,
+        63,
+        63
+      ]
+    },
+    {
+      "name": "Oro Envejecido",
+      "hex": "#b8860b",
+      "rgb": [
+        184,
+        134,
+        11
+      ]
+    },
+    {
+      "name": "Gris Pizarra",
+      "hex": "#708090",
+      "rgb": [
+        112,
+        128,
+        144
+      ]
+    },
+    {
+      "name": "Gris Claro",
+      "hex": "#e0e0e0",
+      "rgb": [
+        224,
+        224,
+        224
+      ]
+    },
+    {
+      "name": "Hueso",
+      "hex": "#f5f5dc",
+      "rgb": [
+        245,
+        245,
+        220
+      ]
+    }
+  ],
+  "WORLD_OF_EDENA": [
+    {
+      "name": "\u00cdndigo",
+      "hex": "#4b0082",
+      "rgb": [
+        75,
+        0,
+        130
+      ]
+    },
+    {
+      "name": "Violeta",
+      "hex": "#8b008b",
+      "rgb": [
+        139,
+        0,
+        139
+      ]
+    },
+    {
+      "name": "Verde Esmeralda",
+      "hex": "#50c878",
+      "rgb": [
+        80,
+        200,
+        120
+      ]
+    },
+    {
+      "name": "Verde Jade",
+      "hex": "#00a86b",
+      "rgb": [
+        0,
+        168,
+        107
+      ]
+    },
+    {
+      "name": "Cian",
+      "hex": "#00ffff",
+      "rgb": [
+        0,
+        255,
+        255
+      ]
+    },
+    {
+      "name": "Azul Cielo Claro",
+      "hex": "#87ceeb",
+      "rgb": [
+        135,
+        206,
+        235
+      ]
+    },
+    {
+      "name": "Rosa Pastel",
+      "hex": "#ffc0cb",
+      "rgb": [
+        255,
+        192,
+        203
+      ]
+    },
+    {
+      "name": "Gris Perla",
+      "hex": "#e5e5e5",
+      "rgb": [
+        229,
+        229,
+        229
+      ]
+    },
+    {
+      "name": "Blanco Fantasma",
+      "hex": "#f8f8ff",
+      "rgb": [
+        248,
+        248,
+        255
+      ]
+    }
+  ],
+  "SABLE_INSPIRED": [
+    {
+      "name": "Arena Oscura",
+      "hex": "#8b7355",
+      "rgb": [
+        139,
+        115,
+        85
+      ]
+    },
+    {
+      "name": "Arena C\u00e1lida",
+      "hex": "#d4a373",
+      "rgb": [
+        212,
+        163,
+        115
+      ]
+    },
+    {
+      "name": "Naranja Suave",
+      "hex": "#ffb84d",
+      "rgb": [
+        255,
+        184,
+        77
+      ]
+    },
+    {
+      "name": "Ocre Rojo",
+      "hex": "#cc6b5b",
+      "rgb": [
+        204,
+        107,
+        91
+      ]
+    },
+    {
+      "name": "Rosa Polvo",
+      "hex": "#d8a5a5",
+      "rgb": [
+        216,
+        165,
+        165
+      ]
+    },
+    {
+      "name": "Azul Desierto",
+      "hex": "#5f8ca8",
+      "rgb": [
+        95,
+        140,
+        168
+      ]
+    },
+    {
+      "name": "Verde Oasis",
+      "hex": "#7fa66a",
+      "rgb": [
+        127,
+        166,
+        106
+      ]
+    },
+    {
+      "name": "Gris Arena",
+      "hex": "#c4b5a0",
+      "rgb": [
+        196,
+        181,
+        160
+      ]
+    },
+    {
+      "name": "Crema",
+      "hex": "#fffdd0",
+      "rgb": [
+        255,
+        253,
+        208
+      ]
+    }
+  ]
+}
